@@ -1,7 +1,5 @@
 from django.contrib import admin
-from django.shortcuts import redirect
-from django.utils import timezone
-from .models import OrganizationCategory, Organization, Vacancy
+from .models import OrganizationCategory, Organization, Vacancy, Candidate
 
 
 @admin.register(OrganizationCategory)
@@ -22,3 +20,8 @@ class Vacancy(admin.ModelAdmin):
     search_fields = ['title', 'organization__name']
     
     change_list_template = 'vacancy/changelist.html'
+
+@admin.register(Candidate)
+class CandidateAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Candidate._meta.fields]
+    change_list_template = 'candidate/changelist.html'

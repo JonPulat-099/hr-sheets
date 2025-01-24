@@ -58,3 +58,14 @@ class Vacancy(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Candidate(models.Model):
+    email = models.EmailField(max_length=100)
+    full_name = models.CharField(max_length=100)
+    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
+    salary = models.DecimalField(max_digits=20, decimal_places=2)
+    country = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.full_name
