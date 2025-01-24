@@ -1,9 +1,8 @@
-from django.http import HttpResponse
+from django.db import IntegrityError
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views import View
-from .models import Vacancy
-from django.http import HttpResponseRedirect
+from .models import Vacancy, Organization
 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -35,14 +34,18 @@ class GetVacancy(View):
             '1AvALes5XGB8ZtOcJwAgLM3kkUj3Ki0oMh5tCq01kJA8').sheet1
         rows = sheet.get_all_values()
 
-        for i in rows[1:]:
-            Vacancy.objects.create(
-                organization_id=1,
-                title=i[1],
-                description=i[4],
-                salary=i[2],
-                created_at=timezone.now()
-            )
-    # )
+        for row in rows[1:]:
+            try:
+                # TODO: Handle this error, when organization category not exists
+                org = Organization.objects.get(org_code=row[3])
+                Vacancy.objects.create(
+                    organization=org,
+                    title=row[1],
+                    description=row[4],
+                    salary=row[2],
+                    created_at=timezone.now()
+                )
+            except IntegrityError:
+                # TODO: Handle this error, when organization not exists
+                pass
         return redirect(request.META['HTTP_REFERER'])
-
