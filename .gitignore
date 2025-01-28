@@ -137,3 +137,5 @@ GitHub.sublime-settings
 !.vscode/extensions.json 
 .history
 organizations/
+credentials.json
+*.ini.py

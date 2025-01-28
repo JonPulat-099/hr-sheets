@@ -1,6 +1,9 @@
 from django.contrib import admin
-from .models import OrganizationCategory, Organization, Vacancy, Candidate
+from .models import OrganizationCategory, Organization, Vacancy, Candidate, Config
 
+@admin.register(Config)
+class ConfigAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Config._meta.fields]
 
 @admin.register(OrganizationCategory)
 class OrganizationCategoryAdmin(admin.ModelAdmin):
