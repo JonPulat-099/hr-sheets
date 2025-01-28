@@ -10,10 +10,10 @@ load_dotenv()
 class Command(BaseCommand):
     help = 'Create a Google Sheet'
 
-    #TODO: try|catch block and handle exceptions
+    # TODO: try|catch block and handle exceptions
 
     def handle(self, *args, **options):
-        self.stdout.write('Command executed successfully')
+        self.stdout.write('🟢 Command runned successfully')
         spreadsheet_details = {
             'properties': {
                 'title': f"{os.getenv('COMPANY_NAME')} HR Dashboard"
@@ -29,24 +29,124 @@ class Command(BaseCommand):
                                 'values': [
                                     {
                                         'userEnteredValue': {
-                                            'stringValue': 'organization'
+                                            'stringValue': 'OrganizationName'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
                                         }
                                     },
                                     {
                                         'userEnteredValue': {
-                                            'stringValue': 'title'
+                                            'stringValue': 'OrganizationCode'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
                                         }
                                     },
                                     {
                                         'userEnteredValue': {
-                                            'stringValue': 'description'
+                                            'stringValue': 'OrganizationCategory'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
                                         }
                                     },
                                     {
                                         'userEnteredValue': {
-                                            'stringValue': 'salary'
+                                            'stringValue': 'VacancyName'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
                                         }
-                                    }
+                                    },
+                                    {
+                                        'userEnteredValue': {
+                                            'stringValue': 'VacancyDetails'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
+                                        }
+                                    },
+                                    {
+                                        'userEnteredValue': {
+                                            'stringValue': 'VacancySalary'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
+                                        }
+                                    },
+                                    {
+                                        'userEnteredValue': {
+                                            'stringValue': 'VacancyCount'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
+                                        }
+                                    },
+
                                 ]
                             }
                         }
@@ -62,24 +162,140 @@ class Command(BaseCommand):
                                 'values': [
                                     {
                                         'userEnteredValue': {
-                                            'stringValue': 'organization'
+                                            'stringValue': 'CandidateName'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
                                         }
                                     },
                                     {
                                         'userEnteredValue': {
-                                            'stringValue': 'name'
+                                            'stringValue': 'CandidateEmail'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
                                         }
                                     },
                                     {
                                         'userEnteredValue': {
-                                            'stringValue': 'email'
+                                            'stringValue': 'CandidateGender'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
                                         }
                                     },
                                     {
                                         'userEnteredValue': {
-                                            'stringValue': 'phone'
+                                            'stringValue': 'CandidateCitizenship'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
                                         }
-                                    }
+                                    },
+                                    {
+                                        'userEnteredValue': {
+                                            'stringValue': 'CandidateSalary'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
+                                        }
+                                    },
+                                    {
+                                        'userEnteredValue': {
+                                            'stringValue': 'CandidateState'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
+                                        }
+                                    },
+                                    {
+                                        'userEnteredValue': {
+                                            'stringValue': 'OrganizationName'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
+                                        }
+                                    },
+                                    {
+                                        'userEnteredValue': {
+                                            'stringValue': 'OrganizationCode'
+                                        },
+                                        'userEnteredFormat': {
+                                            'textFormat': {
+                                                'bold': True
+                                            },
+                                            'backgroundColorStyle': {
+                                                'rgbColor': {
+                                                    'red': 0.6,
+                                                    'green': 0.6,
+                                                    'blue': 0.6
+                                                }
+                                            },
+                                        }
+                                    },
                                 ]
                             }
                         }
@@ -110,4 +326,4 @@ class Command(BaseCommand):
         Config.objects.create(key='sheet_id', value=sheetId)
         Config.objects.create(key='file_id', value=file_id)
 
-        self.stdout.write('Command executed successfully')
+        self.stdout.write('✅ Command executed successfully')
