@@ -30,10 +30,16 @@ class Organization(models.Model):
     vacancy_sheet_url = models.URLField(null=True, blank=True)
     candidate_sheet_url = models.URLField(null=True, blank=True)
     org_code = models.CharField(max_length=100, unique=True, null=False)
-    category = models.ForeignKey(
-        OrganizationCategory, on_delete=models.CASCADE)
-    logo = models.ImageField(upload_to='images/', blank=True, null=True)
+    category = models.ForeignKey(OrganizationCategory, on_delete=models.CASCADE)
+    logo = models.ImageField(upload_to="images/", blank=True, null=True)
+    email = models.EmailField(max_length=100, blank=True, null=True)
+    status = models.CharField(
+        max_length=10,
+        choices={"active": "Актив", "inactive": "Блокирован"},
+        default="active",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(null=False, auto_now=True)
 
     def delete(self, *args, **kwargs):
         if self.logo:
@@ -43,10 +49,11 @@ class Organization(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            spreadsheetID = Config.objects.get(key='sheet_id').value
+            spreadsheetID = Config.objects.get(key="sheet_id").value
             if spreadsheetID:
                 vacancy_url, candidate_url = add_sheets_to_organization(
-                    self, spreadsheetID)
+                    self, spreadsheetID
+                )
 
                 self.vacancy_sheet_url = vacancy_url
                 self.candidate_sheet_url = candidate_url
@@ -75,10 +82,12 @@ def delete_image_file(sender, instance, **kwargs):
 
 class Vacancy(models.Model):
     organization = models.ForeignKey(
-        Organization, to_field="org_code", on_delete=models.CASCADE)
+        Organization, to_field="org_code", on_delete=models.CASCADE
+    )
     title = models.CharField(max_length=100)
     description = models.TextField()
     salary = models.DecimalField(max_digits=10, decimal_places=2)
+    count = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -86,11 +95,19 @@ class Vacancy(models.Model):
 
 
 class Candidate(models.Model):
-    email = models.EmailField(max_length=100)
     full_name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100)
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
     salary = models.DecimalField(max_digits=20, decimal_places=2)
     country = models.CharField(max_length=100)
+    state = models.CharField(
+        max_length=10,
+        choices={"progress": "В Процессе", "accept": "Одобрено", "reject": "Отказано"},
+        default="active",
+    )
+    gender = models.CharField(
+        choices={"male": "Мужской", "female": "Женский"}, max_length=10, default="male"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
