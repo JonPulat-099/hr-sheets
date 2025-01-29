@@ -2,8 +2,8 @@ import os
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
-from sheets.services.google.auth import spreadsheet_service, drive_service
 from googleapiclient.errors import HttpError
+from sheets.services.google.add_sheet import add_sheets_to_organization
 
 
 class Config(models.Model):
@@ -43,29 +43,13 @@ class Organization(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            requests = []
-            requests.append({
-                'addSheet': {
-                    'properties': {
-                        'title': f"{self.org_code}_vacancies",
-                    },
-                }
-            })
-            requests.append({
-                'addSheet': {
-                    'properties': {
-                        'title': f"{self.org_code}_candidates"
-                    },
-                }
-            })
+            spreadsheetID = Config.objects.get(key='sheet_id').value
+            if spreadsheetID:
+                vacancy_url, candidate_url = add_sheets_to_organization(
+                    self, spreadsheetID)
 
-            body = {"requests": requests}
-            sheet = spreadsheet_service.spreadsheets().batchUpdate(
-                spreadsheetId=Config.objects.get(key='sheet_id').value, body=body).execute()
-            replies = sheet.get('replies')
-
-            self.vacancy_sheet_url = f"https://docs.google.com/spreadsheets/d/{Config.objects.get(key='sheet_id').value}/edit#gid={replies[0]['addSheet']['properties']['sheetId']}"
-            self.candidate_sheet_url = f"https://docs.google.com/spreadsheets/d/{Config.objects.get(key='sheet_id').value}/edit#gid={replies[1]['addSheet']['properties']['sheetId']}"
+                self.vacancy_sheet_url = vacancy_url
+                self.candidate_sheet_url = candidate_url
         except HttpError as err:
             print(err)
 
