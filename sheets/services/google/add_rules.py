@@ -99,7 +99,7 @@ def add_rule_to_candidate_sheet(spreadsheet_id, sheet_id, organization):
                         "type": "ONE_OF_RANGE",
                         "values": [
                             {
-                                "userEnteredValue": f"={organization.org_code}_vacancies!B2:B"
+                                "userEnteredValue": f"='{organization.org_code}_vacancies'!B2:B"
                             },
                         ],
                     },

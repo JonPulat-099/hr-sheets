@@ -35,36 +35,6 @@ def create_spreadsheet():
                                     },
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "OrganizationCode"
-                                        },
-                                        "userEnteredFormat": {
-                                            "textFormat": {"bold": True},
-                                            "backgroundColorStyle": {
-                                                "rgbColor": {
-                                                    "red": 0.6,
-                                                    "green": 0.6,
-                                                    "blue": 0.6,
-                                                }
-                                            },
-                                        },
-                                    },
-                                    {
-                                        "userEnteredValue": {
-                                            "stringValue": "OrganizationCategory"
-                                        },
-                                        "userEnteredFormat": {
-                                            "textFormat": {"bold": True},
-                                            "backgroundColorStyle": {
-                                                "rgbColor": {
-                                                    "red": 0.6,
-                                                    "green": 0.6,
-                                                    "blue": 0.6,
-                                                }
-                                            },
-                                        },
-                                    },
-                                    {
-                                        "userEnteredValue": {
                                             "stringValue": "VacancyName"
                                         },
                                         "userEnteredFormat": {
@@ -226,7 +196,7 @@ def create_spreadsheet():
                                     },
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "OrganizationName"
+                                            "stringValue": "VacancyName"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},
@@ -241,7 +211,7 @@ def create_spreadsheet():
                                     },
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "OrganizationCode"
+                                            "stringValue": "OrganizationName"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},

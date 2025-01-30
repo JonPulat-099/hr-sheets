@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_delete
 from googleapiclient.errors import HttpError
 from sheets.services.google.add_sheet import add_sheets_to_organization
+from sheets.services.google.add_permission import permission
 
 
 class Config(models.Model):
@@ -50,13 +51,22 @@ class Organization(models.Model):
     def save(self, *args, **kwargs):
         try:
             spreadsheetID = Config.objects.get(key="sheet_id").value
-            if spreadsheetID:
+            fileID = Config.objects.get(key="file_id").value
+
+            if spreadsheetID and fileID:
                 vacancy_url, candidate_url = add_sheets_to_organization(
                     self, spreadsheetID
                 )
 
                 self.vacancy_sheet_url = vacancy_url
                 self.candidate_sheet_url = candidate_url
+
+                #TODO: Add permission to the sheet (by email)| check and remove old permissions
+                permission(self.email, spreadsheetID)
+            
+            else:
+                print("No spreadsheetID or fileID found")
+
         except HttpError as err:
             print(err)
 
