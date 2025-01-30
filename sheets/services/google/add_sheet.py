@@ -1,5 +1,8 @@
 from sheets.services.google.auth import spreadsheet_service
-from sheets.services.google.add_rules import add_rules_to_sheet
+from sheets.services.google.add_rules import (
+    add_rule_to_candidate_sheet,
+    add_rules_to_vacancies_sheet,
+)
 
 
 def add_sheets_to_organization(organization, spreadsheet_id):
@@ -42,13 +45,18 @@ def add_sheets_to_organization(organization, spreadsheet_id):
         "values": [
             [
                 "OrganizationName",
-                "OrganizationCode",
-                "OrganizationCategory",
                 "VacancyName",
                 "VacancyDetails",
                 "VacancySalary",
                 "VacancyCount",
-            ]
+            ],
+            [
+                f"{organization.name} [{organization.org_code}]",
+                "Тест вакансия",
+                "Подробности тестовой вакансии",
+                "100000",
+                "1",
+            ],
         ]
     }
 
@@ -62,20 +70,8 @@ def add_sheets_to_organization(organization, spreadsheet_id):
                 "CandidateCitizenship",
                 "CandidateSalary",
                 "CandidateState",
-                "OrganizationName",
-                "OrganizationCode",
                 "VacancyName",
-            ],
-            [
-                "INTel",
-                "test@gmail.com",
-                "male",
-                "Nigeria",
-                "100000",
-                "Lagos",
-                "INTel",
-                "IN",
-                "Software Engineer",
+                "OrganizationName",
             ],
         ]
     }
@@ -95,7 +91,17 @@ def add_sheets_to_organization(organization, spreadsheet_id):
         body=candidate_sheet_range_body,
     ).execute()
 
-    add_rules_to_sheet(spreadsheet_id, new_sheets['replies'][1]['addSheet']['properties']['sheetId'])
+    add_rule_to_candidate_sheet(
+        spreadsheet_id,
+        new_sheets["replies"][1]["addSheet"]["properties"]["sheetId"],
+        organization,
+    )
+
+    add_rules_to_vacancies_sheet(
+        spreadsheet_id,
+        new_sheets["replies"][0]["addSheet"]["properties"]["sheetId"],
+        organization,
+    )
 
     # return vacancy_sheet_url & candidate_sheet_url
     vacancy_url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/edit#gid={

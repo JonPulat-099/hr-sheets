@@ -15,12 +15,12 @@ class Command(BaseCommand):
             if response.status_code == 200:
                 data = response.json()
                 print(f"Fetched {len(data)} countries")
-                for country in data:
-                    # print(country.get("name").get("common"))
-                    save_data(country)
+                save_data(data)
 
             else:
-                self.stdout.write(f"❌ Failed to fetch data, status code: {response.status_code}")
+                self.stdout.write(
+                    f"❌ Failed to fetch data, status code: {response.status_code}"
+                )
 
         except Exception as e:
             self.stdout.write(f"❌ Failed to fetch data: {e}")
