@@ -112,3 +112,12 @@ class Candidate(models.Model):
 
     def __str__(self):
         return self.full_name
+
+
+class Country(models.Model):
+    iso_code = models.CharField(max_length=3, unique=True)
+    name_ru = models.CharField(max_length=100)
+    flag = models.ImageField(upload_to="flags/", blank=True, null=True)
+
+    def __str__(self):
+        return self.name_ru

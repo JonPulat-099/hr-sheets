@@ -1,4 +1,5 @@
 from sheets.services.google.auth import spreadsheet_service
+from sheets.services.google.add_rules import add_rules_to_sheet
 
 
 def add_sheets_to_organization(organization, spreadsheet_id):
@@ -93,6 +94,8 @@ def add_sheets_to_organization(organization, spreadsheet_id):
         valueInputOption="RAW",
         body=candidate_sheet_range_body,
     ).execute()
+
+    add_rules_to_sheet(spreadsheet_id, new_sheets['replies'][1]['addSheet']['properties']['sheetId'])
 
     # return vacancy_sheet_url & candidate_sheet_url
     vacancy_url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/edit#gid={

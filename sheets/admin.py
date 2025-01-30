@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import OrganizationCategory, Organization, Vacancy, Candidate, Config
+from .models import OrganizationCategory, Organization, Vacancy, Candidate, Config, Country
 
 
 @admin.register(Config)
@@ -39,3 +39,7 @@ class Vacancy(admin.ModelAdmin):
 class CandidateAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Candidate._meta.fields]
     change_list_template = "candidate/changelist.html"
+
+@admin.register(Country)
+class CountryAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Country._meta.fields]
