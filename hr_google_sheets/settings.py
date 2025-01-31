@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-x@9vrmlmqssj4vc3ibvm**c%*o*96z1j!#9yfx3ggbe@+k=#fq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['hr-dashboard-13f8db9e4ed1.herokuapp.com', 'hr-dash.netlify.app']
 
 
 # Application definition
