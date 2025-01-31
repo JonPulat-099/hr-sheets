@@ -3,6 +3,9 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from django.views import View
 from .models import Vacancy, Organization, Candidate
+from django.db.models import Sum
+from django.http import JsonResponse
+from django.db import connection
 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -10,8 +13,10 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 class GetVacancy(View):
     def get(self, request):
-        scope = ['https://spreadsheets.google.com/feeds',
-                 'https://www.googleapis.com/auth/drive']
+        scope = [
+            "https://spreadsheets.google.com/feeds",
+            "https://www.googleapis.com/auth/drive",
+        ]
 
         data = {
             "type": "service_account",
@@ -24,15 +29,15 @@ class GetVacancy(View):
             "token_uri": "https://oauth2.googleapis.com/token",
             "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
             "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/jonpulat%40python-sheets-448719.iam.gserviceaccount.com",
-            "universe_domain": "googleapis.com"
+            "universe_domain": "googleapis.com",
         }
 
-        creds = ServiceAccountCredentials.from_json_keyfile_dict(
-            data, scope)
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(data, scope)
         client = gspread.authorize(creds)
         sheet = client.open_by_key(
-            '1AvALes5XGB8ZtOcJwAgLM3kkUj3Ki0oMh5tCq01kJA8').worksheets()
-        print(123, '-> ', sheet)
+            "1AvALes5XGB8ZtOcJwAgLM3kkUj3Ki0oMh5tCq01kJA8"
+        ).worksheets()
+        print(123, "-> ", sheet)
         for sh in sheet:
             rows = sh.get_all_values()
 
@@ -44,19 +49,21 @@ class GetVacancy(View):
                         organization=org,
                         title=row[1],
                         description=row[4],
-                        salary=str(row[2]).replace(' ', ''),
-                        created_at=timezone.now()
+                        salary=str(row[2]).replace(" ", ""),
+                        created_at=timezone.now(),
                     )
                 except IntegrityError:
                     # TODO: Handle this error, when organization not exists
                     pass
-        return redirect(request.META['HTTP_REFERER'])
+        return redirect(request.META["HTTP_REFERER"])
 
 
 class GetCandidate(View):
     def get(self, request):
-        scope = ['https://spreadsheets.google.com/feeds',
-                 'https://www.googleapis.com/auth/drive']
+        scope = [
+            "https://spreadsheets.google.com/feeds",
+            "https://www.googleapis.com/auth/drive",
+        ]
 
         data = {
             "type": "service_account",
@@ -69,16 +76,16 @@ class GetCandidate(View):
             "token_uri": "https://oauth2.googleapis.com/token",
             "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
             "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/jonpulat%40python-sheets-448719.iam.gserviceaccount.com",
-            "universe_domain": "googleapis.com"
+            "universe_domain": "googleapis.com",
         }
 
-        creds = ServiceAccountCredentials.from_json_keyfile_dict(
-            data, scope)
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(data, scope)
         client = gspread.authorize(creds)
         sheet = client.open_by_key(
-            '1TaGUjcaf4I5lKVpWgGxC0XxQhfgI9nYgx0sDjoM5zak').worksheets()
+            "1TaGUjcaf4I5lKVpWgGxC0XxQhfgI9nYgx0sDjoM5zak"
+        ).worksheets()
 
-        print(123, '-> ', sheet)
+        print(123, "-> ", sheet)
         for sh in sheet:
             rows = sh.get_all_values()
 
@@ -91,8 +98,8 @@ class GetCandidate(View):
                         email=row[1],
                         full_name=row[2],
                         country=row[5],
-                        salary=str(row[4]).replace(' ', ''),
-                        created_at=timezone.now()
+                        salary=str(row[4]).replace(" ", ""),
+                        created_at=timezone.now(),
                     )
                 except Vacancy.DoesNotExist:
                     print(row)
@@ -100,4 +107,48 @@ class GetCandidate(View):
                 except IntegrityError:
                     # TODO: Handle this error, when organization not exists
                     pass
-        return redirect(request.META['HTTP_REFERER'])
+        return redirect(request.META["HTTP_REFERER"])
+
+
+def getMainStats(request):
+    query = """
+        SELECT 
+            o.country, 
+            c.name_ru, 
+            c.flag, 
+            COUNT(o.country) AS count
+        FROM sheets_candidate o
+        LEFT JOIN sheets_country c ON o.country = c.iso_code
+        GROUP BY o.country, c.name_ru, c.flag;
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        columns = [col[0] for col in cursor.description]  # Get column names
+        countries = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+    total_vacancy = Vacancy.objects.aggregate(Sum("count"))["count__sum"]
+    total_candidate = Candidate.objects.count()
+    total_new_position = total_vacancy
+
+    all_org = Organization.objects.all()
+    result = []
+    for org in all_org:
+        total_org_vacancy = Vacancy.objects.filter(organization=org).count()
+
+        result.append({
+            "org": org.name,
+            "logo": org.logo.url if org.logo else None,
+            "competition": total_org_vacancy
+        })
+        print(total_new_position)
+
+    data = {
+        "total_price": total_vacancy,
+        "total_candidate": total_candidate,
+        "total_new_position": total_new_position,
+        "totla_country": countries,
+        "organization": result
+    }
+
+    return JsonResponse(data)
