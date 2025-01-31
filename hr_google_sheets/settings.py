@@ -26,12 +26,18 @@ SECRET_KEY = 'django-insecure-x@9vrmlmqssj4vc3ibvm**c%*o*96z1j!#9yfx3ggbe@+k=#fq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['hr-dashboard-13f8db9e4ed1.herokuapp.com', 'hr-dash.netlify.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # React/Vue frontend running locally
+    "http://127.0.0.1:5173",  # Alternative localhost URL
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +49,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

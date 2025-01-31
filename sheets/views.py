@@ -2,7 +2,7 @@ from django.db import IntegrityError
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views import View
-from .models import Vacancy, Organization, Candidate
+from .models import Country, OrganizationCategory, Vacancy, Organization, Candidate
 from django.db.models import Sum
 from django.http import JsonResponse
 from django.db import connection
@@ -115,7 +115,7 @@ def getMainStats(request):
         SELECT 
             o.country, 
             c.name_ru, 
-            c.flag, 
+            c.flag,
             COUNT(o.country) AS count
         FROM sheets_candidate o
         LEFT JOIN sheets_country c ON o.country = c.iso_code
@@ -136,19 +136,85 @@ def getMainStats(request):
     for org in all_org:
         total_org_vacancy = Vacancy.objects.filter(organization=org).count()
 
-        result.append({
-            "org": org.name,
-            "logo": org.logo.url if org.logo else None,
-            "competition": total_org_vacancy
-        })
+        result.append(
+            {
+                "name": org.name,
+                "href": org.org_code,
+                "logo": org.logo.url if org.logo else None,
+                "competition": total_org_vacancy,
+            }
+        )
         print(total_new_position)
 
     data = {
-        "total_price": total_vacancy,
+        "total_competition": total_candidate / total_vacancy,
+        "total_vacancy": total_vacancy,
         "total_candidate": total_candidate,
         "total_new_position": total_new_position,
         "totla_country": countries,
-        "organization": result
+        "organizations": result,
+    }
+
+    return JsonResponse(data)
+
+
+def orgStats(request, org_code):
+    org = Organization.objects.get(org_code=org_code)
+    vacancy = Vacancy.objects.filter(organization=org)
+    candidate = Candidate.objects.filter(vacancy__organization=org)
+    can_country = Candidate.objects.filter(vacancy__organization=org).values("country")
+    countries = []
+    byLevel = []
+
+    for country in can_country:
+        countries.append(
+            {
+                "name": Country.objects.get(iso_code=country["country"]).name_ru,
+                "flag": (
+                    Country.objects.get(iso_code=country["country"]).flag.url
+                    if Country.objects.get(iso_code=country["country"]).flag
+                    else None
+                ),
+                "countCandidates": candidate.filter(country=country["country"]).count(),
+                "text": "Кандидат",
+            }
+        )
+
+    for v in vacancy:
+        byLevel.append(
+            {
+                "vacancyName": v.title,
+                "minSalary": v.salary,
+                "averageCompetitors": candidate.filter(vacancy=v).count() / v.count,
+                "details": v.description,
+                "orgCategory": OrganizationCategory.objects.get(
+                    id=org.category_id
+                ).name,
+                "orgLogo": org.logo.url if org.logo else None,
+                "competition": Candidate.objects.filter(
+                    vacancy=v, vacancy__organization=org
+                ).count(),
+            }
+        )
+
+    print(countries)
+
+    data = {
+        "name": org.name,
+        "org_code": org_code,
+        "logo": org.logo.url if org.logo else None,
+        "stats": {
+            "averageCompetitors": candidate.count() / vacancy.count(),
+            "countInternationals": candidate.exclude(country="uz").count(),
+            "countExperts": candidate.exclude(country="uz").count(),
+            "totalEmployees": 0,
+            "genderDistribution": {
+                "male": str(candidate.filter(gender="male").count()),
+                "female": str(candidate.filter(gender="famale").count()),
+            },
+        },
+        "candidatesByCountry": countries,
+        "competitionByLevel": byLevel,
     }
 
     return JsonResponse(data)
