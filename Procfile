@@ -1,1 +1,0 @@
-web: gunicorn --config gunicorn.conf.py hr_google_sheets.wsgi
