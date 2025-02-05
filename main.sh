@@ -57,7 +57,7 @@ if [ $status -ne 0 ]; then
 fi
 echo "migrate ->  OK"
 
-python3 manage.py shell < add_user.py
+python3 manage.py adduser
 status=$?
 if [ $status -ne 0 ]; then
   echo "Failed to add user: $status"
