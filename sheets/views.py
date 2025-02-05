@@ -8,6 +8,9 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 
+def custom_404_view(request, exception):
+    return redirect('/admin/')
+
 class GetVacancy(View):
     def get(self, request):
         scope = ['https://spreadsheets.google.com/feeds',
