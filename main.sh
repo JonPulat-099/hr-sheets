@@ -65,6 +65,22 @@ if [ $status -ne 0 ]; then
 fi
 echo "super user ->  OK"
 
+python3 manage.py fetchcountry
+status=$?
+if [ $status -ne 0 ]; then
+  echo "Failed to create spreadsheet: $status"
+  exit $status
+fi
+echo "fetchcountry ->  OK"
+
+python3 manage.py createsheet
+status=$?
+if [ $status -ne 0 ]; then
+  echo "Failed to create spreadsheet: $status"
+  exit $status
+fi
+echo "spreadsheet ->  OK"
+
 
 python3 manage.py runserver 0.0.0.0:8000
 status=$?
