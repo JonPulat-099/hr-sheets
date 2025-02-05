@@ -1,11 +1,9 @@
 from .auth import spreadsheet_service
-from sheets.models import Config
 
 
-def get_all():
+
+def get_sheets(spreadsheet_id):
     try:
-        spreadsheet_id = Config.objects.get(key="sheet_id").value
-
         spreadsheet = (
             spreadsheet_service.spreadsheets()
             .get(spreadsheetId=spreadsheet_id)
@@ -13,6 +11,19 @@ def get_all():
         )
 
         sheets = spreadsheet.get("sheets")
+
+        return sheets
+
+    except Exception as e:
+        print(f"❌ Failed: {e}")
+        return []
+
+def get_all():
+    try:
+        from sheets.models import Config
+        spreadsheet_id = Config.objects.get(key="sheet_id").value
+
+        sheets = get_sheets(spreadsheet_id)
 
         canditates = []
         vacancies = []

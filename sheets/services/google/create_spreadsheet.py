@@ -20,7 +20,7 @@ def create_spreadsheet():
                                 "values": [
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "OrganizationName"
+                                            "stringValue": "Название организации"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},
@@ -35,7 +35,7 @@ def create_spreadsheet():
                                     },
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "VacancyName"
+                                            "stringValue": "Название вакансии"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},
@@ -50,7 +50,7 @@ def create_spreadsheet():
                                     },
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "VacancyDetails"
+                                            "stringValue": "Детали вакансии"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},
@@ -64,9 +64,7 @@ def create_spreadsheet():
                                         },
                                     },
                                     {
-                                        "userEnteredValue": {
-                                            "stringValue": "VacancySalary"
-                                        },
+                                        "userEnteredValue": {"stringValue": "Зарплата"},
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},
                                             "backgroundColorStyle": {
@@ -80,7 +78,7 @@ def create_spreadsheet():
                                     },
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "VacancyCount"
+                                            "stringValue": "Кол-во вакансий"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},
@@ -106,7 +104,7 @@ def create_spreadsheet():
                                 "values": [
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "CandidateName"
+                                            "stringValue": "Полное имя кандидата"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},
@@ -121,7 +119,76 @@ def create_spreadsheet():
                                     },
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "CandidateEmail"
+                                            "stringValue": "Эл. почта кандидата"
+                                        },
+                                        "userEnteredFormat": {
+                                            "textFormat": {"bold": True},
+                                            "backgroundColorStyle": {
+                                                "rgbColor": {
+                                                    "red": 0.6,
+                                                    "green": 0.6,
+                                                    "blue": 0.6,
+                                                }
+                                            },
+                                        },
+                                    },
+                                    {
+                                        "userEnteredValue": {"stringValue": "Пол"},
+                                        "userEnteredFormat": {
+                                            "textFormat": {"bold": True},
+                                            "backgroundColorStyle": {
+                                                "rgbColor": {
+                                                    "red": 0.6,
+                                                    "green": 0.6,
+                                                    "blue": 0.6,
+                                                }
+                                            },
+                                        },
+                                    },
+                                    {
+                                        "userEnteredValue": {
+                                            "stringValue": "Гражданство"
+                                        },
+                                        "userEnteredFormat": {
+                                            "textFormat": {"bold": True},
+                                            "backgroundColorStyle": {
+                                                "rgbColor": {
+                                                    "red": 0.6,
+                                                    "green": 0.6,
+                                                    "blue": 0.6,
+                                                }
+                                            },
+                                        },
+                                    },
+                                    {
+                                        "userEnteredValue": {"stringValue": "Зарплата"},
+                                        "userEnteredFormat": {
+                                            "textFormat": {"bold": True},
+                                            "backgroundColorStyle": {
+                                                "rgbColor": {
+                                                    "red": 0.6,
+                                                    "green": 0.6,
+                                                    "blue": 0.6,
+                                                }
+                                            },
+                                        },
+                                    },
+                                    {
+                                        "userEnteredValue": {"stringValue": "Статус"},
+                                        "userEnteredFormat": {
+                                            "textFormat": {"bold": True},
+                                            "backgroundColorStyle": {
+                                                "rgbColor": {
+                                                    "red": 0.6,
+                                                    "green": 0.6,
+                                                    "blue": 0.6,
+                                                }
+                                            },
+                                        },
+                                    },
+                                    {
+                                        "userEnteredValue": {
+                                            "stringValue": "Название вакансии"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},
@@ -136,7 +203,33 @@ def create_spreadsheet():
                                     },
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "CandidateGender"
+                                            "stringValue": "Название организации"
+                                        },
+                                        "userEnteredFormat": {
+                                            "textFormat": {"bold": True},
+                                            "backgroundColorStyle": {
+                                                "rgbColor": {
+                                                    "red": 0.6,
+                                                    "green": 0.6,
+                                                    "blue": 0.6,
+                                                }
+                                            },
+                                        },
+                                    },
+                                ]
+                            }
+                        }
+                    ],
+                },
+                {
+                    "properties": {"title": "employees_all"},
+                    "data": [
+                        {
+                            "rowData": {
+                                "values": [
+                                    {
+                                        "userEnteredValue": {
+                                            "stringValue": "Название организации"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},
@@ -151,7 +244,7 @@ def create_spreadsheet():
                                     },
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "CandidateCitizenship"
+                                            "stringValue": "Кол-во сотрудников"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},
@@ -166,7 +259,7 @@ def create_spreadsheet():
                                     },
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "CandidateSalary"
+                                            "stringValue": "Кол-во сотрудников (мужского пола)"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},
@@ -181,7 +274,7 @@ def create_spreadsheet():
                                     },
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "CandidateState"
+                                            "stringValue": "Кол-во сотрудников (женского пола)"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},
@@ -196,22 +289,7 @@ def create_spreadsheet():
                                     },
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "VacancyName"
-                                        },
-                                        "userEnteredFormat": {
-                                            "textFormat": {"bold": True},
-                                            "backgroundColorStyle": {
-                                                "rgbColor": {
-                                                    "red": 0.6,
-                                                    "green": 0.6,
-                                                    "blue": 0.6,
-                                                }
-                                            },
-                                        },
-                                    },
-                                    {
-                                        "userEnteredValue": {
-                                            "stringValue": "OrganizationName"
+                                            "stringValue": "Всего экспатриантов"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},

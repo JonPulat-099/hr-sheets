@@ -10,6 +10,7 @@ def add_sheets_to_organization(organization, spreadsheet_id):
     sheets = [
         f"{organization.org_code}_vacancies",
         f"{organization.org_code}_candidates",
+        f"{organization.org_code}_employees",
     ]
 
     requests.append(
@@ -30,6 +31,15 @@ def add_sheets_to_organization(organization, spreadsheet_id):
             }
         }
     )
+    requests.append(
+        {
+            "addSheet": {
+                "properties": {
+                    "title": sheets[2],
+                },
+            }
+        }
+    )
     body = {"requests": requests}
 
     # add sheets for organization
@@ -44,11 +54,11 @@ def add_sheets_to_organization(organization, spreadsheet_id):
     vacancy_sheet_range_body = {
         "values": [
             [
-                "OrganizationName",
-                "VacancyName",
-                "VacancyDetails",
-                "VacancySalary",
-                "VacancyCount",
+                "Название организации",
+                "Название вакансии",
+                "Детали вакансии",
+                "Зарплата",
+                "Кол-во вакансий",
             ],
             [
                 f"{organization.name} [{organization.org_code}]",
@@ -64,15 +74,27 @@ def add_sheets_to_organization(organization, spreadsheet_id):
     candidate_sheet_range_body = {
         "values": [
             [
-                "CandidateName",
-                "CandidateEmail",
-                "CandidateGender",
-                "CandidateCitizenship",
-                "CandidateSalary",
-                "CandidateState",
-                "VacancyName",
-                "OrganizationName",
+                "Полное имя кандидата",
+                "Эл. почта кандидата",
+                "Пол",
+                "Гражданство",
+                "Зарплата",
+                "Статус",
+                "Название вакансии",
+                "Название организации",
             ],
+        ]
+    }
+    
+    employee_sheet_range_body = {
+        "values": [
+            [
+                "Название организации",
+                "Кол-во сотрудников",
+                "Кол-во сотрудников (мужского пола)",
+                "Кол-во сотрудников (женского пола)",
+                "Всего экспатриантов"
+            ]
         ]
     }
 
@@ -91,6 +113,13 @@ def add_sheets_to_organization(organization, spreadsheet_id):
         body=candidate_sheet_range_body,
     ).execute()
 
+    spreadsheet_service.spreadsheets().values().update(
+        spreadsheetId=spreadsheet_id,
+        range=f"{sheets[2]}!A1",
+        valueInputOption="RAW",
+        body=employee_sheet_range_body,
+    ).execute()
+
     add_rule_to_candidate_sheet(
         spreadsheet_id,
         new_sheets["replies"][1]["addSheet"]["properties"]["sheetId"],
@@ -100,6 +129,12 @@ def add_sheets_to_organization(organization, spreadsheet_id):
     add_rules_to_vacancies_sheet(
         spreadsheet_id,
         new_sheets["replies"][0]["addSheet"]["properties"]["sheetId"],
+        organization,
+    )
+
+    add_rules_to_vacancies_sheet(
+        spreadsheet_id,
+        new_sheets["replies"][2]["addSheet"]["properties"]["sheetId"],
         organization,
     )
 

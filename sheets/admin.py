@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import OrganizationCategory, Organization, Vacancy, Candidate, Config, Country
+from .models import VacancyCategory, Organization, Vacancy, Candidate, Config, Country
 
 
 @admin.register(Config)
@@ -7,9 +7,9 @@ class ConfigAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Config._meta.fields]
 
 
-@admin.register(OrganizationCategory)
-class OrganizationCategoryAdmin(admin.ModelAdmin):
-    list_display = ("name", "created_at")
+@admin.register(VacancyCategory)
+class VacancyCategoryAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in VacancyCategory._meta.fields]
 
 
 @admin.register(Organization)
@@ -17,11 +17,14 @@ class OrganizationAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "org_code",
-        "category",
         "logo",
         "created_at",
         "vacancy_sheet_url",
         "candidate_sheet_url",
+        "employees",
+        "male_employees",
+        "female_employees",
+        "expatriates",
     )
     exclude = ("vacancy_sheet_url", "candidate_sheet_url")
 
@@ -29,7 +32,8 @@ class OrganizationAdmin(admin.ModelAdmin):
 @admin.register(Vacancy)
 class Vacancy(admin.ModelAdmin):
     list_display = [field.name for field in Vacancy._meta.fields]
-    list_filter = ["created_at", "organization", "salary"]  # Example for adding filters
+    list_filter = ["created_at", "organization",
+                   "salary"]  # Example for adding filters
     search_fields = ["title", "organization__name"]
 
     change_list_template = "vacancy/changelist.html"
@@ -39,6 +43,7 @@ class Vacancy(admin.ModelAdmin):
 class CandidateAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Candidate._meta.fields]
     change_list_template = "candidate/changelist.html"
+
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):

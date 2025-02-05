@@ -140,3 +140,4 @@ credentials.json
 *.ini.py
 
 staticfiles/
+media/
