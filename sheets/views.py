@@ -146,6 +146,27 @@ def mainStats(request):
             .values("count", "name", "logo", "org_code", "candidate")
         )
 
+        topVacancies = (
+            Vacancy.objects
+            .filter(is_top=True)
+            .annotate(
+                candidate=Count(
+                    "application",
+                    filter=~Q(application__state="reject")
+                    & ~Q(application__state="hired"),
+                )
+            )
+            .values(
+                "id",
+                "title",
+                "salary",
+                "description",
+                "organization__logo",
+                "candidate",
+                "category__name",
+            )
+        )
+
         data = {
             "total_competition": (
                 0 if total_vacancy == 0 else total_applications / total_vacancy
@@ -169,6 +190,7 @@ def mainStats(request):
                     organizations,
                 )
             ),
+            "topVacancies": list(topVacancies)
         }
         return JsonResponse(data)
     except Exception as e:
@@ -314,4 +336,3 @@ def getCategories(request):
     data = {"categories": list(payload)}
 
     return JsonResponse(data)
-
