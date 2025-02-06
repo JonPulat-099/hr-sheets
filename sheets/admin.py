@@ -1,10 +1,14 @@
 from django.contrib import admin
-from .models import VacancyCategory, Organization, Vacancy, Candidate, Config, Country
+from .models import VacancyCategory, Organization, Vacancy, Candidate, Config, Country, Application
 
 
 @admin.register(Config)
 class ConfigAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Config._meta.fields]
+
+@admin.register(Application)
+class ApplicationAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Application._meta.fields]
 
 
 @admin.register(VacancyCategory)
