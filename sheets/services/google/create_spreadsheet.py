@@ -91,6 +91,21 @@ def create_spreadsheet():
                                             },
                                         },
                                     },
+                                    {
+                                        "userEnteredValue": {
+                                            "stringValue": " Топ вакансия"
+                                        },
+                                        "userEnteredFormat": {
+                                            "textFormat": {"bold": True},
+                                            "backgroundColorStyle": {
+                                                "rgbColor": {
+                                                    "red": 0.6,
+                                                    "green": 0.6,
+                                                    "blue": 0.6,
+                                                }
+                                            },
+                                        },
+                                    },
                                 ]
                             }
                         }

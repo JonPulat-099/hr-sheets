@@ -59,6 +59,7 @@ def add_sheets_to_organization(organization, spreadsheet_id):
                 "Детали вакансии",
                 "Зарплата",
                 "Кол-во вакансий",
+                'Топ вакансия'
             ],
             [
                 f"{organization.name} [{organization.org_code}]",
@@ -66,6 +67,7 @@ def add_sheets_to_organization(organization, spreadsheet_id):
                 "Подробности тестовой вакансии",
                 "100000",
                 "1",
+                "Да"
             ],
         ]
     }
@@ -130,12 +132,14 @@ def add_sheets_to_organization(organization, spreadsheet_id):
         spreadsheet_id,
         new_sheets["replies"][0]["addSheet"]["properties"]["sheetId"],
         organization,
+        True
     )
 
     add_rules_to_vacancies_sheet(
         spreadsheet_id,
         new_sheets["replies"][2]["addSheet"]["properties"]["sheetId"],
         organization,
+        False
     )
 
     # return vacancy_sheet_url & candidate_sheet_url

@@ -36,8 +36,7 @@ def add_rule_to_candidate_sheet(spreadsheet_id, sheet_id, organization):
     values = []
 
     for country in countires:
-        values.append(
-            {"userEnteredValue": f"{country.name_ru} [{country.iso_code}]"})
+        values.append({"userEnteredValue": f"{country.name_ru} [{country.iso_code}]"})
 
     requests.append(
         {
@@ -74,18 +73,10 @@ def add_rule_to_candidate_sheet(spreadsheet_id, sheet_id, organization):
                     "condition": {
                         "type": "ONE_OF_LIST",
                         "values": [
-                            {
-                                "userEnteredValue": "Новый [new]"
-                            },
-                            {
-                                "userEnteredValue": "В Процессе [progress]"
-                            },
-                            {
-                                "userEnteredValue": "Одобрено [hired]"
-                            },
-                            {
-                                "userEnteredValue": "Отказано [reject]"
-                            },
+                            {"userEnteredValue": "Новый [new]"},
+                            {"userEnteredValue": "В Процессе [progress]"},
+                            {"userEnteredValue": "Одобрено [hired]"},
+                            {"userEnteredValue": "Отказано [reject]"},
                         ],
                     },
                     "showCustomUi": True,
@@ -156,7 +147,7 @@ def add_rule_to_candidate_sheet(spreadsheet_id, sheet_id, organization):
     )
 
 
-def add_rules_to_vacancies_sheet(spreadsheet_id, sheet_id, organization):
+def add_rules_to_vacancies_sheet(spreadsheet_id, sheet_id, organization, has_top):
     requests = []
 
     requests.append(
@@ -185,6 +176,32 @@ def add_rules_to_vacancies_sheet(spreadsheet_id, sheet_id, organization):
         }
     )
 
+    if has_top:
+        requests.append(
+            {
+                "setDataValidation": {
+                    "range": {
+                        "sheetId": sheet_id,
+                        "startColumnIndex": 5,
+                        "endColumnIndex": 6,
+                        "startRowIndex": 1,
+                    },
+                    "rule": {
+                        "condition": {
+                            "type": "ONE_OF_LIST",
+                            "values": [
+                                {"userEnteredValue": "Да"},
+                                {"userEnteredValue": "Нет"},
+                            ],
+                        },
+                        "showCustomUi": True,
+                        "inputMessage": "Это топ ваканыия ?",
+                        "strict": False,
+                    },
+                }
+            }
+        )
+
     body = {"requests": requests}
     response = (
         spreadsheet_service.spreadsheets()
@@ -195,13 +212,13 @@ def add_rules_to_vacancies_sheet(spreadsheet_id, sheet_id, organization):
 
 def update_rules_of_vacancies_sheet(spreadsheet_id):
     if spreadsheet_id is None:
-        print('spreadsheet_id is None')
+        print("spreadsheet_id is None")
         return
 
     from sheets.models import VacancyCategory
 
     categories = VacancyCategory.objects.all()
-    print('categories -> ', categories)
+    print("categories -> ", categories)
     values = []
 
     for category in categories:
