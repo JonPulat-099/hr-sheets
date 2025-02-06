@@ -27,6 +27,8 @@ SECRET_KEY = 'django-insecure-x@9vrmlmqssj4vc3ibvm**c%*o*96z1j!#9yfx3ggbe@+k=#fq
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = ["https://hr-dash.netlify.app"]
 
 
 # Application definition
@@ -40,9 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'sheets.apps.SheetsConfig',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

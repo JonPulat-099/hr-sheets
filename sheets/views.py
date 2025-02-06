@@ -81,12 +81,12 @@ def mainStats(request):
             "total_vacancy": total_vacancy,
             "total_candidate": total_applications,
             "total_new_position": total_vacancy,
-            "totla_country": countries,
+            "total_country": countries,
             "organizations": list(
                 map(
                     lambda org: {
                         "name": org["name"],
-                        "org_code": org["org_code"],
+                        "href": org["org_code"],
                         "competition": (
                             0
                             if org["count"] == None
@@ -172,6 +172,7 @@ def orgStats(request, org_code):
                         "name": c["candidate__country__name_ru"],
                         "flag": "/media/" + c["candidate__country__flag"],
                         "candidate": c["application_count"],
+                        "text": "Кандидатов",
                     },
                     countries,
                 )
@@ -180,7 +181,7 @@ def orgStats(request, org_code):
                 map(
                     lambda item: {
                         "vacancyName": item["title"],
-                        "minSalary": item["salary"],
+                        "minSalary": round(item["salary"]),
                         "averageCompetitors": (
                             0
                             if item["count"] == None or item["count"] == 0
