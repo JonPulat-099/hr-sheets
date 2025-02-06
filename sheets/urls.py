@@ -1,9 +1,8 @@
 from django.urls import path
-from .views import GetVacancy, GetCandidate, mainStats, orgStats, getCategories
+from .views import UpdateDatabase, mainStats, orgStats, getCategories
 
 urlpatterns = [
-    path("get-vacancy/", GetVacancy.as_view(), name="get_vacancy"),
-    path("fetch-candidate/", GetCandidate.as_view(), name="fetch_candidate"),
+    path("fetch-candidate/", UpdateDatabase.as_view(), name="update_db"),
 
     path("main-stats/", mainStats, name="main_stats"),
     path('organization/<str:org_code>', orgStats, name='org_stats'),

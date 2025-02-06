@@ -6,6 +6,8 @@ from .models import VacancyCategory, Organization, Vacancy, Candidate, Config, C
 class ConfigAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Config._meta.fields]
 
+    change_list_template = "admin/changelist.html"
+
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Application._meta.fields]
@@ -40,13 +42,13 @@ class Vacancy(admin.ModelAdmin):
                    "salary"]  # Example for adding filters
     search_fields = ["title", "organization__name"]
 
-    change_list_template = "vacancy/changelist.html"
+    # change_list_template = "vacancy/changelist.html"
 
 
 @admin.register(Candidate)
 class CandidateAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Candidate._meta.fields]
-    change_list_template = "candidate/changelist.html"
+    # change_list_template = "candidate/changelist.html"
 
 
 @admin.register(Country)
