@@ -5,7 +5,7 @@ from sheets.models import Config
 
 def collection():
     spreadsheet_id = Config.objects.get(key="sheet_id").value
-    vacancies, canditates = get_all()
+    vacancies, canditates, employees = get_all()
 
     (
         spreadsheet_service.spreadsheets()
@@ -26,6 +26,18 @@ def collection():
             spreadsheetId=spreadsheet_id,
             range=f"candidates_all!A2",
             body={"values": canditates},
+            valueInputOption="RAW",
+        )
+        .execute()
+    )
+
+    (
+        spreadsheet_service.spreadsheets()
+        .values()
+        .update(
+            spreadsheetId=spreadsheet_id,
+            range=f"employees_all!A2",
+            body={"values": employees},
             valueInputOption="RAW",
         )
         .execute()

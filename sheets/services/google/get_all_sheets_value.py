@@ -27,6 +27,7 @@ def get_all():
 
         canditates = []
         vacancies = []
+        employees = []
 
         for sheet in sheets:
             sheet_name = sheet["properties"]["title"]
@@ -44,8 +45,10 @@ def get_all():
                 canditates += values[1:]
             elif sheet_name.endswith("_vacancies"):
                 vacancies += values[1:]
+            elif sheet_name.endswith("_employees"):
+                employees += values[1:]
 
-        return vacancies, canditates
+        return vacancies, canditates, employees
 
     except Exception as e:
         print(f"❌ Failed: {e}")
