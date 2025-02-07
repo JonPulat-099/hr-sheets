@@ -5,15 +5,28 @@ from django.http import JsonResponse
 from django.db.models import Sum, Count, Q
 from django.db import connection
 from sheets.services.google.save_to_db import save_data
+from sheets.services.google.collection_sheets import collection
 
 
 def custom_404_view(request, exception):
     return redirect("/admin/")
 
+
 class UpdateDatabase(View):
     def get(self, request):
         try:
             save_data()
+        except Exception as e:
+            pass
+            print(e)
+
+        return redirect(request.META["HTTP_REFERER"])
+
+
+class MergeSheets(View):
+    def get(self, request):
+        try:
+            collection()
         except Exception as e:
             pass
             print(e)
@@ -54,8 +67,7 @@ def mainStats(request):
         )
 
         topVacancies = (
-            Vacancy.objects
-            .filter(is_top=True)
+            Vacancy.objects.filter(is_top=True)
             .annotate(
                 candidate=Count(
                     "application",
@@ -97,7 +109,7 @@ def mainStats(request):
                     organizations,
                 )
             ),
-            "topVacancies": list(topVacancies)
+            "topVacancies": list(topVacancies),
         }
         return JsonResponse(data)
     except Exception as e:
@@ -157,12 +169,12 @@ def orgStats(request, org_code):
                     "male": (
                         0
                         if org.employees == None
-                        else round((org.male_employees or 0) / org.employees, 1)
+                        else round((org.male_employees or 0) / org.employees, 2) * 100
                     ),
                     "female": (
                         0
                         if org.employees == None
-                        else round((org.female_employees or 0) / org.employees, 1)
+                        else round((org.female_employees or 0) / org.employees, 2) * 100
                     ),
                 },
             },
@@ -177,23 +189,27 @@ def orgStats(request, org_code):
                     countries,
                 )
             ),
-            "competitionByLevel": list(
-                map(
-                    lambda item: {
-                        "vacancyName": item["title"],
-                        "minSalary": round(item["salary"]),
-                        "averageCompetitors": (
-                            0
-                            if item["count"] == None or item["count"] == 0
-                            else round(item["candidate"] / item["count"], 1)
-                        ),
-                        "details": item["description"],
-                        "orgCategory": item["category__name"],
-                        "orgLogo": org.logo.url if org.logo else "",
-                        "candidate": item["candidate"],
-                    },
-                    byLevel,
-                )
+            "competitionByLevel": sorted(
+                list(
+                    map(
+                        lambda item: {
+                            "vacancyName": item["title"],
+                            "minSalary": round(item["salary"]),
+                            "averageCompetitors": (
+                                0
+                                if item["count"] == None or item["count"] == 0
+                                else round(item["candidate"] / item["count"], 1)
+                            ),
+                            "details": item["description"],
+                            "orgCategory": item["category__name"],
+                            "orgLogo": org.logo.url if org.logo else "",
+                            "candidate": item["candidate"],
+                        },
+                        byLevel,
+                    )
+                ),
+                key=lambda x: x["averageCompetitors"],
+                reverse=True,
             ),
         }
 
