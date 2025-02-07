@@ -168,12 +168,12 @@ def orgStats(request, org_code):
                 "genderDistribution": {
                     "male": (
                         0
-                        if org.employees == None
+                        if org.employees == 0 or org.employees == None
                         else round((org.male_employees or 0) / org.employees, 2) * 100
                     ),
                     "female": (
                         0
-                        if org.employees == None
+                        if org.employees == 0 or org.employees == None
                         else round((org.female_employees or 0) / org.employees, 2) * 100
                     ),
                 },
