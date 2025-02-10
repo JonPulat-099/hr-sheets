@@ -100,52 +100,80 @@ def add_sheets_to_organization(organization, spreadsheet_id):
         ]
     }
 
-    # add headers to the new sheets
-    spreadsheet_service.spreadsheets().values().update(
-        spreadsheetId=spreadsheet_id,
-        range=f"{sheets[0]}!A1",
-        valueInputOption="RAW",
-        body=vacancy_sheet_range_body,
-    ).execute()
-
-    spreadsheet_service.spreadsheets().values().update(
-        spreadsheetId=spreadsheet_id,
-        range=f"{sheets[1]}!A1",
-        valueInputOption="RAW",
-        body=candidate_sheet_range_body,
-    ).execute()
-
-    spreadsheet_service.spreadsheets().values().update(
-        spreadsheetId=spreadsheet_id,
-        range=f"{sheets[2]}!A1",
-        valueInputOption="RAW",
-        body=employee_sheet_range_body,
-    ).execute()
-
-    add_rule_to_candidate_sheet(
-        spreadsheet_id,
-        new_sheets["replies"][1]["addSheet"]["properties"]["sheetId"],
-        organization,
-    )
-
-    add_rules_to_vacancies_sheet(
-        spreadsheet_id,
-        new_sheets["replies"][0]["addSheet"]["properties"]["sheetId"],
-        organization,
-        True
-    )
-
-    add_rules_to_vacancies_sheet(
-        spreadsheet_id,
-        new_sheets["replies"][2]["addSheet"]["properties"]["sheetId"],
-        organization,
-        False
-    )
-
-    # return vacancy_sheet_url & candidate_sheet_url
     vacancy_url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/edit#gid={
         new_sheets['replies'][0]['addSheet']['properties']['sheetId']}"
     candidate_url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/edit#gid={
         new_sheets['replies'][1]['addSheet']['properties']['sheetId']}"
+
+    # add headers to the new sheets
+    try:
+        spreadsheet_service.spreadsheets().values().update(
+            spreadsheetId=spreadsheet_id,
+            range=f"{sheets[0]}!A1",
+            valueInputOption="RAW",
+            body=vacancy_sheet_range_body,
+        ).execute()
+    except Exception as e:
+        pass
+        print('ERROR [ADD VACANCIES SHEET] =>', e)
+
+    try:
+        spreadsheet_service.spreadsheets().values().update(
+            spreadsheetId=spreadsheet_id,
+            range=f"{sheets[1]}!A1",
+            valueInputOption="RAW",
+            body=candidate_sheet_range_body,
+        ).execute()
+    except Exception as e:
+        pass
+        print('ERROR [ADD CANDIDATE SHEET] =>', e)
+
+    try:
+        spreadsheet_service.spreadsheets().values().update(
+            spreadsheetId=spreadsheet_id,
+            range=f"{sheets[2]}!A1",
+            valueInputOption="RAW",
+            body=employee_sheet_range_body,
+        ).execute()
+
+    except Exception as e:
+        pass
+        print('ERROR [ADD EMPLOYEES SHEET] =>', e)
+
+
+    try:
+        add_rule_to_candidate_sheet(
+            spreadsheet_id,
+            new_sheets["replies"][1]["addSheet"]["properties"]["sheetId"],
+            organization,
+        )
+    except Exception as e:
+        pass
+        print('ERROR [ADD CANDIDATE RULES]', e)
+
+    try:
+        add_rules_to_vacancies_sheet(
+            spreadsheet_id,
+            new_sheets["replies"][0]["addSheet"]["properties"]["sheetId"],
+            organization,
+            True
+        )
+    except Exception as e:
+        pass
+        print('ERROR [ADD VACANCIES RULES]', e)
+
+    try:
+        add_rules_to_vacancies_sheet(
+            spreadsheet_id,
+            new_sheets["replies"][2]["addSheet"]["properties"]["sheetId"],
+            organization,
+            False
+        )
+    except Exception as e:
+        pass
+        print('ERROR [ADD EMPLOYES RULES]', e)
+
+    # return vacancy_sheet_url & candidate_sheet_url
+   
 
     return vacancy_url, candidate_url
