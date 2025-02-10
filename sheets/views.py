@@ -2,7 +2,8 @@ from django.shortcuts import redirect
 from django.views import View
 from .models import Vacancy, Organization, Application, VacancyCategory
 from django.http import JsonResponse
-from django.db.models import Sum, Count, Q
+from django.db.models import Sum, Count, Q, OuterRef, Value, Subquery
+from django.db.models.functions import Coalesce
 from django.db import connection
 from sheets.services.google.save_to_db import save_data
 from sheets.services.google.collection_sheets import collection
@@ -60,9 +61,21 @@ def mainStats(request):
 
         total_vacancy = Vacancy.objects.aggregate(Sum("count"))["count__sum"] or 0
         total_applications = Application.objects.count() or 0
+
+        vacancy_subquery = (
+            Vacancy.objects.filter(organization=OuterRef("org_code"))
+            .values("organization")
+            .annotate(
+                total_vacancies=Coalesce(Sum("count"), Value(0))  # Replace None with 0
+            )
+            .values("total_vacancies")
+        )
+
         organizations = (
-            Organization.objects.annotate(count=Sum("vacancy__count"))
-            .annotate(candidate=Count("application"))
+            Organization.objects.annotate(
+            count=Coalesce(Subquery(vacancy_subquery), Value(0)),
+            candidate=Count("application", distinct=True),
+            )
             .values("count", "name", "logo", "org_code", "candidate")
         )
 
@@ -87,8 +100,8 @@ def mainStats(request):
         )
 
         data = {
-            "total_competition": (
-                0 if total_vacancy == 0 else total_applications / total_vacancy
+            "total_competition": round(
+                (0 if total_vacancy == 0 else total_applications / total_vacancy), 1
             ),
             "total_vacancy": total_vacancy,
             "total_candidate": total_applications,
@@ -168,12 +181,12 @@ def orgStats(request, org_code):
                 "genderDistribution": {
                     "male": (
                         0
-                        if org.employees == 0 or org.employees == None
+                        if org.employees == 0
                         else round((org.male_employees or 0) / org.employees, 2) * 100
                     ),
                     "female": (
                         0
-                        if org.employees == 0 or org.employees == None
+                        if org.employees == 0
                         else round((org.female_employees or 0) / org.employees, 2) * 100
                     ),
                 },
