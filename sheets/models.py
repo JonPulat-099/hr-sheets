@@ -28,8 +28,7 @@ class Country(models.Model):
 
 class Organization(models.Model):
     name = models.CharField(max_length=100)
-    vacancy_sheet_url = models.URLField(null=True, blank=True)
-    candidate_sheet_url = models.URLField(null=True, blank=True)
+    sheet_url = models.URLField(null=True, blank=True)
     org_code = models.CharField(max_length=100, unique=True, null=False)
     logo = models.ImageField(upload_to="images/", blank=True, null=True)
     email = models.EmailField(max_length=100, blank=True, null=True)
@@ -57,12 +56,11 @@ class Organization(models.Model):
             fileID = Config.objects.get(key="file_id").value
 
             if spreadsheetID and fileID:
-                vacancy_url, candidate_url = add_sheets_to_organization(
+                sheet_url= add_sheets_to_organization(
                     self, spreadsheetID
                 )
 
-                self.vacancy_sheet_url = vacancy_url
-                self.candidate_sheet_url = candidate_url
+                self.sheet_url = sheet_url
 
                 # TODO: Add permission to the sheet (by email)| check and remove old permissions
                 permission(self.email, spreadsheetID)
