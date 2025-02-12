@@ -94,35 +94,19 @@ class VacancyCategory(models.Model):
 
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
-        try:
-
-            spreadsheetID = Config.objects.get(key="sheet_id").value
-            update_rules_of_vacancies_sheet(spreadsheetID)
-        except Config.DoesNotExist:
-            pass
-            print("Config not fount")
+        # update_rules_of_vacancies_sheet()
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        try:
-            spreadsheetID = Config.objects.get(key="sheet_id").value
-            update_rules_of_vacancies_sheet(spreadsheetID)
-        except Config.DoesNotExist:
-            pass
-            print("Config not fount")
+        # update_rules_of_vacancies_sheet()
 
     def __str__(self):
         return self.name
 
 
-@receiver(post_delete, sender=VacancyCategory)
-def delete_category(sender, instance, **kwargs):
-    try:
-        spreadsheetID = Config.objects.get(key="sheet_id").value
-        update_rules_of_vacancies_sheet(spreadsheetID)
-    except Config.DoesNotExist:
-        pass
-        print("Config not found")
+# @receiver(post_delete, sender=VacancyCategory)
+# def delete_category(sender, instance, **kwargs):
+#     # update_rules_of_vacancies_sheet()
 
 
 class Vacancy(models.Model):
