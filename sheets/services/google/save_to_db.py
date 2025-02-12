@@ -1,8 +1,8 @@
 from sheets.models import Application, Config, Candidate, Country, Vacancy, Organization, VacancyCategory
-from .get_all_sheets_value import get_all
+from .get_all_sheets_value import get_all_organization_sheets
 import re
 from django.core.exceptions import ObjectDoesNotExist
-from django.forms.models import model_to_dict
+import uuid
 
 def extract_org_code(org_string):
     match = re.search(r"\[([a-zA-Z0-9_-]+)\]", org_string)
@@ -13,7 +13,7 @@ def extract_org_code(org_string):
 
 def save_data():
     try:
-        vacancies, canditates, employees = get_all()
+        vacancies, canditates, employees = get_all_organization_sheets()
 
         # write vacancies
         for vacancy in vacancies:
@@ -22,7 +22,7 @@ def save_data():
                 #print('org_code -> ', org_code)
                 if org_code:
                     org = Organization.objects.get(org_code=org_code)
-                    category, created = VacancyCategory.objects.get_or_create(name=vacancy[2])
+                    category, created = VacancyCategory.objects.get_or_create(name=vacancy[2] or str(uuid.uuid4())[:15])
                     is_top = False
                     if len(vacancy) > 5:
                         is_top = vacancy[5] == "Да"
@@ -50,7 +50,7 @@ def save_data():
                 if org_code:
                     org = Organization.objects.get(org_code=org_code)
                     vacancy = Vacancy.objects.filter(organization=org, title=candidate[6]).first()
-                    print('org -> ', org.name, '  vacancy -> ', vacancy.title)
+                    # print('org -> ', org.name, '  vacancy -> ', vacancy.title)
 
                     if org and vacancy:
                         gender = extract_org_code(candidate[2])
