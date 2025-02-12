@@ -59,7 +59,7 @@ def add_sheets_to_organization(organization, spreadsheet_id):
                 "Детали вакансии",
                 "Зарплата",
                 "Кол-во вакансий",
-                'Топ вакансия'
+                "Топ вакансия",
             ],
             [
                 f"{organization.name} [{organization.org_code}]",
@@ -67,7 +67,7 @@ def add_sheets_to_organization(organization, spreadsheet_id):
                 "Подробности тестовой вакансии",
                 "100000",
                 "1",
-                "Да"
+                "Да",
             ],
         ]
     }
@@ -87,7 +87,7 @@ def add_sheets_to_organization(organization, spreadsheet_id):
             ],
         ]
     }
-    
+
     employee_sheet_range_body = {
         "values": [
             [
@@ -95,7 +95,7 @@ def add_sheets_to_organization(organization, spreadsheet_id):
                 "Кол-во сотрудников",
                 "Кол-во сотрудников (мужского пола)",
                 "Кол-во сотрудников (женского пола)",
-                "Всего экспатриантов"
+                "Всего экспатриантов",
             ]
         ]
     }
@@ -115,7 +115,7 @@ def add_sheets_to_organization(organization, spreadsheet_id):
         ).execute()
     except Exception as e:
         pass
-        print('ERROR [ADD VACANCIES SHEET] =>', e)
+        print("ERROR [ADD VACANCIES SHEET] =>", e)
 
     try:
         spreadsheet_service.spreadsheets().values().update(
@@ -126,7 +126,7 @@ def add_sheets_to_organization(organization, spreadsheet_id):
         ).execute()
     except Exception as e:
         pass
-        print('ERROR [ADD CANDIDATE SHEET] =>', e)
+        print("ERROR [ADD CANDIDATE SHEET] =>", e)
 
     try:
         spreadsheet_service.spreadsheets().values().update(
@@ -138,8 +138,7 @@ def add_sheets_to_organization(organization, spreadsheet_id):
 
     except Exception as e:
         pass
-        print('ERROR [ADD EMPLOYEES SHEET] =>', e)
-
+        print("ERROR [ADD EMPLOYEES SHEET] =>", e)
 
     try:
         add_rule_to_candidate_sheet(
@@ -149,31 +148,32 @@ def add_sheets_to_organization(organization, spreadsheet_id):
         )
     except Exception as e:
         pass
-        print('ERROR [ADD CANDIDATE RULES]', e)
+        print("ERROR [ADD CANDIDATE RULES]", e)
 
     try:
         add_rules_to_vacancies_sheet(
             spreadsheet_id,
             new_sheets["replies"][0]["addSheet"]["properties"]["sheetId"],
             organization,
-            True
+            True,
         )
     except Exception as e:
         pass
-        print('ERROR [ADD VACANCIES RULES]', e)
+        print("ERROR [ADD VACANCIES RULES]", e)
 
     try:
         add_rules_to_vacancies_sheet(
             spreadsheet_id,
             new_sheets["replies"][2]["addSheet"]["properties"]["sheetId"],
             organization,
-            False
+            False,
         )
     except Exception as e:
         pass
-        print('ERROR [ADD EMPLOYES RULES]', e)
+        print("ERROR [ADD EMPLOYES RULES]", e)
 
     # return vacancy_sheet_url & candidate_sheet_url
-   
 
     return vacancy_url, candidate_url
+
+

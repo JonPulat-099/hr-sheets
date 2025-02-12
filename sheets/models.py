@@ -2,10 +2,9 @@ import os
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
-from googleapiclient.errors import HttpError
-from sheets.services.google.add_sheet import add_sheets_to_organization
-from sheets.services.google.add_permission import permission
+from sheets.services.google.add_permission import update_permission, delete_persmission
 from sheets.services.google.add_rules import update_rules_of_vacancies_sheet
+from sheets.services.google.create_spreadsheet import create_spreadsheet_organization
 
 
 class Config(models.Model):
@@ -31,7 +30,7 @@ class Organization(models.Model):
     sheet_url = models.URLField(null=True, blank=True)
     org_code = models.CharField(max_length=100, unique=True, null=False)
     logo = models.ImageField(upload_to="images/", blank=True, null=True)
-    email = models.EmailField(max_length=100, blank=True, null=True)
+    email = models.EmailField(max_length=100, null=False)
     status = models.CharField(
         max_length=10,
         choices={"active": "Актив", "inactive": "Блокирован"},
@@ -48,37 +47,31 @@ class Organization(models.Model):
         if self.logo:
             if os.path.isfile(self.logo.path):
                 os.remove(self.logo.path)
+        if self.sheet_url:
+            try:
+                delete_persmission(self.sheet_url, self.email)
+            except Exception as e:
+                print(e)
         super().delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         try:
-            spreadsheetID = Config.objects.get(key="sheet_id").value
-            fileID = Config.objects.get(key="file_id").value
+            if self.id:
+                this = Organization.objects.get(id=self.id)
 
-            if spreadsheetID and fileID:
-                sheet_url= add_sheets_to_organization(
-                    self, spreadsheetID
-                )
+                if this and this.logo != self.logo:
+                    if this.logo:
+                        this.logo.delete(save=False)
+
+                if this and this.email != self.email:
+                    update_permission(this.email, self.email, this.sheet_url)
+            elif self.id is None and self.name and self.email:
+                sheet_url = create_spreadsheet_organization(self)
 
                 self.sheet_url = sheet_url
-
-                # TODO: Add permission to the sheet (by email)| check and remove old permissions
-                permission(self.email, spreadsheetID)
-
-            else:
-                print("No spreadsheetID or fileID found")
-
-        except HttpError as err:
-            print(err)
-
-        try:
-            this = Organization.objects.get(id=self.id)
-            if this.logo != self.logo:
-                if this.logo:
-                    this.logo.delete(save=False)
-        except Organization.DoesNotExist:
-            pass  # when new object
-
+        except Exception as e:
+            print("Error [CREATE/UPDATE|Organization]: ", e)
+            pass
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -89,6 +82,10 @@ class Organization(models.Model):
 def delete_image_file(sender, instance, **kwargs):
     if instance.logo and instance.logo.storage.exists(instance.logo.name):
         instance.logo.delete(save=False)
+    try:
+        delete_persmission(instance.sheet_url, instance.email)
+    except Exception as e:
+        print("Error [ACTION|DeletePermission]: ", e)
 
 
 class VacancyCategory(models.Model):
