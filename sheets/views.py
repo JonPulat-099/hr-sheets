@@ -182,12 +182,12 @@ def orgStats(request, org_code):
                     "male": (
                         0
                         if org.employees == 0
-                        else round((org.male_employees or 0) / org.employees, 2) * 100
+                        else round(((org.male_employees or 0) / org.employees) * 100, 2)
                     ),
                     "female": (
                         0
                         if org.employees == 0
-                        else round((org.female_employees or 0) / org.employees, 2) * 100
+                        else round(((org.female_employees or 0) / org.employees) * 100, 2) 
                     ),
                 },
             },
