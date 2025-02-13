@@ -210,7 +210,7 @@ def orgStats(request, org_code):
                             "minSalary": round(item["salary"]),
                             "averageCompetitors": (
                                 0
-                                if item["count"] == None or item["count"] == 0
+                                if item["count"] == 0
                                 else round(item["candidate"] / item["count"], 1)
                             ),
                             "details": item["description"],
