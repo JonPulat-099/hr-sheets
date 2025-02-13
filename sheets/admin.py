@@ -1,5 +1,15 @@
 from django.contrib import admin
-from .models import VacancyCategory, Organization, Vacancy, Candidate, Config, Country, Application
+from .models import (
+    VacancyCategory,
+    Organization,
+    Vacancy,
+    Candidate,
+    Config,
+    Country,
+    Application,
+)
+from django.db import models
+from ckeditor.fields import RichTextField
 
 
 @admin.register(Config)
@@ -7,6 +17,7 @@ class ConfigAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Config._meta.fields]
 
     change_list_template = "admin/changelist.html"
+
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
@@ -16,6 +27,9 @@ class ApplicationAdmin(admin.ModelAdmin):
 @admin.register(VacancyCategory)
 class VacancyCategoryAdmin(admin.ModelAdmin):
     list_display = [field.name for field in VacancyCategory._meta.fields]
+    formfield_overrides = {
+        models.TextField: {"widget": RichTextField()},
+    }
 
 
 @admin.register(Organization)
@@ -25,21 +39,19 @@ class OrganizationAdmin(admin.ModelAdmin):
         "org_code",
         "logo",
         "created_at",
-        "vacancy_sheet_url",
-        "candidate_sheet_url",
+        "sheet_url",
         "employees",
         "male_employees",
         "female_employees",
         "expatriates",
     )
-    exclude = ("vacancy_sheet_url", "candidate_sheet_url")
+    exclude = ["sheet_url"]
 
 
 @admin.register(Vacancy)
 class Vacancy(admin.ModelAdmin):
     list_display = [field.name for field in Vacancy._meta.fields]
-    list_filter = ["created_at", "organization",
-                   "salary"]  # Example for adding filters
+    list_filter = ["created_at", "organization", "salary"]  # Example for adding filters
     search_fields = ["title", "organization__name"]
 
     # change_list_template = "vacancy/changelist.html"

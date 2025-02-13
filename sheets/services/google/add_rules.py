@@ -127,7 +127,7 @@ def add_rule_to_candidate_sheet(spreadsheet_id, sheet_id, organization):
                         "type": "ONE_OF_RANGE",
                         "values": [
                             {
-                                "userEnteredValue": f"='{organization.org_code}_vacancies'!B2:B"
+                                "userEnteredValue": f"='vacancies_all'!B2:B"
                             },
                         ],
                     },
@@ -182,8 +182,8 @@ def add_rules_to_vacancies_sheet(spreadsheet_id, sheet_id, organization, has_top
                 "setDataValidation": {
                     "range": {
                         "sheetId": sheet_id,
-                        "startColumnIndex": 5,
-                        "endColumnIndex": 6,
+                        "startColumnIndex": 6,
+                        "endColumnIndex": 7,
                         "startRowIndex": 1,
                     },
                     "rule": {
@@ -210,33 +210,37 @@ def add_rules_to_vacancies_sheet(spreadsheet_id, sheet_id, organization, has_top
     )
 
 
-def update_rules_of_vacancies_sheet(spreadsheet_id):
-    if spreadsheet_id is None:
-        print("spreadsheet_id is None")
-        return
-
-    from sheets.models import VacancyCategory
+def update_rules_of_vacancies_sheet():
+    from sheets.models import VacancyCategory, Organization
 
     categories = VacancyCategory.objects.all()
-    print("categories -> ", categories)
+    
     values = []
 
     for category in categories:
         values.append({"userEnteredValue": category.name})
 
-    sheets = get_sheets(spreadsheet_id)
-    requests = []
 
-    for sheet in sheets:
-        sheet_name = sheet["properties"]["title"]
-        if sheet_name.endswith("_vacancies"):
-            sheet_id = sheet["properties"]["sheetId"]
+    organizations = Organization.objects.all()
 
-            requests.append(
+    if (len(organizations) == 0):
+        return
+
+    for org in organizations:
+        try:
+            spreadsheet_id = str(org.sheet_url).split("/")[-1]
+            sheets = get_sheets(spreadsheet_id)
+            vacancy_sheet_id = None
+            for sheet in sheets:
+                if sheet["properties"]["title"] == "vacancies_all":
+                    vacancy_sheet_id = sheet["properties"]["sheetId"]
+                    break
+
+            request = [
                 {
                     "setDataValidation": {
                         "range": {
-                            "sheetId": sheet_id,
+                            "sheetId": vacancy_sheet_id,
                             "startColumnIndex": 2,
                             "endColumnIndex": 3,
                             "startRowIndex": 1,
@@ -248,15 +252,18 @@ def update_rules_of_vacancies_sheet(spreadsheet_id):
                             },
                             "showCustomUi": True,
                             "inputMessage": "Select category",
-                            "strict": True,
+                            "strict": False,
                         },
                     }
                 }
-            )
+            ]
 
-    body = {"requests": requests}
-    response = (
-        spreadsheet_service.spreadsheets()
-        .batchUpdate(spreadsheetId=spreadsheet_id, body=body)
-        .execute()
-    )
+            body = {"requests": request}
+            response = (
+                spreadsheet_service.spreadsheets()
+                .batchUpdate(spreadsheetId=spreadsheet_id, body=body)
+                .execute()
+            )
+        except Exception as e:
+            print(f"❌ Failed: {e}")
+            return

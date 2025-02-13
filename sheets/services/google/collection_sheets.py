@@ -1,11 +1,11 @@
 from .auth import spreadsheet_service
-from .get_all_sheets_value import get_all
+from .get_all_sheets_value import get_all_organization_sheets
 from sheets.models import Config
 
 
 def collection():
     spreadsheet_id = Config.objects.get(key="sheet_id").value
-    vacancies, canditates, employees = get_all()
+    vacancies, canditates, employees = get_all_organization_sheets()
 
     (
         spreadsheet_service.spreadsheets()
