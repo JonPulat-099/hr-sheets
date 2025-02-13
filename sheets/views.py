@@ -114,7 +114,7 @@ def mainStats(request):
                         "href": org["org_code"],
                         "competition": (
                             0
-                            if org["count"] == None
+                            if org["count"] == 0
                             else round(org["candidate"] / org["count"], 1)
                         ),
                         "logo": "" if org["logo"] == "" else "/media/" + org["logo"],
