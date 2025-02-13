@@ -182,8 +182,8 @@ def add_rules_to_vacancies_sheet(spreadsheet_id, sheet_id, organization, has_top
                 "setDataValidation": {
                     "range": {
                         "sheetId": sheet_id,
-                        "startColumnIndex": 5,
-                        "endColumnIndex": 6,
+                        "startColumnIndex": 6,
+                        "endColumnIndex": 7,
                         "startRowIndex": 1,
                     },
                     "rule": {

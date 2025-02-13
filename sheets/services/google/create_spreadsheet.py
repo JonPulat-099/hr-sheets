@@ -56,7 +56,22 @@ def create_spreadsheet():
                                     },
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "Детали вакансии"
+                                            "stringValue": "Категория вакансии"
+                                        },
+                                        "userEnteredFormat": {
+                                            "textFormat": {"bold": True},
+                                            "backgroundColorStyle": {
+                                                "rgbColor": {
+                                                    "red": 0.6,
+                                                    "green": 0.6,
+                                                    "blue": 0.6,
+                                                }
+                                            },
+                                        },
+                                    },
+                                    {
+                                        "userEnteredValue": {
+                                            "stringValue": "Описание вакансии"
                                         },
                                         "userEnteredFormat": {
                                             "textFormat": {"bold": True},
@@ -412,7 +427,22 @@ def create_spreadsheet_organization(organization):
                                         },
                                         {
                                             "userEnteredValue": {
-                                                "stringValue": "Детали вакансии"
+                                                "stringValue": "Категория вакансии"
+                                            },
+                                            "userEnteredFormat": {
+                                                "textFormat": {"bold": True},
+                                                "backgroundColorStyle": {
+                                                    "rgbColor": {
+                                                        "red": 0.6,
+                                                        "green": 0.6,
+                                                        "blue": 0.6,
+                                                    }
+                                                },
+                                            },
+                                        },
+                                        {
+                                            "userEnteredValue": {
+                                                "stringValue": "Описание вакансии"
                                             },
                                             "userEnteredFormat": {
                                                 "textFormat": {"bold": True},
@@ -483,6 +513,11 @@ def create_spreadsheet_organization(organization):
                                     {
                                         "userEnteredValue": {
                                             "stringValue": "Тест вакансия"
+                                        },
+                                    },
+                                    {
+                                        "userEnteredValue": {
+                                            "stringValue": "ИТ депатмент"
                                         },
                                     },
                                     {

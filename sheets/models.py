@@ -89,7 +89,7 @@ def delete_image_file(sender, instance, **kwargs):
 
 
 class VacancyCategory(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True)
     

@@ -22,10 +22,11 @@ def save_data():
                 #print('org_code -> ', org_code)
                 if org_code:
                     org = Organization.objects.get(org_code=org_code)
-                    category, created = VacancyCategory.objects.get_or_create(name=vacancy[2] or str(uuid.uuid4())[:15])
+                    category, created = VacancyCategory.objects.get_or_create(name=vacancy[2] or str(uuid.uuid4())[:15], organization=org)
+
                     is_top = False
-                    if len(vacancy) > 5:
-                        is_top = vacancy[5] == "Да"
+                    if len(vacancy) > 6:
+                        is_top = vacancy[6] == "Да"
                         
                     if category:
                         #print('org -> ', org.name, '  vacancy -> ', vacancy[1])
@@ -33,9 +34,10 @@ def save_data():
                             organization=org,
                             title=vacancy[1],
                             category=category,
-                            salary=vacancy[3],
-                            count=vacancy[4],
+                            salary=vacancy[4],
+                            count=vacancy[5],
                             is_top=is_top,
+                            description=vacancy[3]
                         )
             except Exception as e:
                 print('[ERROR]', e)
