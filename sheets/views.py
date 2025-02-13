@@ -246,8 +246,8 @@ def orgStats(request, org_code):
         )
 
 
-def getCategories(request):
-    categories = VacancyCategory.objects.all()[:5]
+def getCategories(request, org_code):
+    categories = VacancyCategory.objects.filter(organization__org_code=org_code)
     payload = []
 
     for category in categories:

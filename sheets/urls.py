@@ -8,5 +8,5 @@ urlpatterns = [
     path("merge-sheets/", MergeSheets.as_view(), name="merge_sheets"),
     path("main-stats/", mainStats, name="main_stats"),
     path("organization/<str:org_code>", orgStats, name="org_stats"),
-    path("categories/", getCategories, name="get_categories"),
+    path("categories/<str:org_code>", getCategories, name="get_categories"),
 ]
