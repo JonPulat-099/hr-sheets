@@ -477,7 +477,7 @@ def create_spreadsheet_organization(organization):
                                 "values": [
                                     {
                                         "userEnteredValue": {
-                                            "stringValue": "Название организации"
+                                            "stringValue": f"{organization.name} [{organization.org_code}]"
                                         },
                                     },
                                     {

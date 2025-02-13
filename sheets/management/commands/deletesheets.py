@@ -16,7 +16,7 @@ class Command(BaseCommand):
         try:
             spreadsheet_id = Config.objects.get(key="sheet_id").value
             sheets = get_sheets(spreadsheet_id)
-            print("sheets -> , ", sheets)
+            # print("sheets -> , ", sheets)
 
             request = []
 
