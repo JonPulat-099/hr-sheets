@@ -38,6 +38,7 @@ class OrganizationAdmin(admin.ModelAdmin):
         "name",
         "org_code",
         "logo",
+        "email",
         "created_at",
         "sheet_url",
         "employees",
