@@ -3,7 +3,9 @@ cachetools==5.5.1
 certifi==2024.12.14
 charset-normalizer==3.4.1
 Django==5.1.5
+django-ckeditor==6.7.2
 django-cors-headers==4.6.0
+django-js-asset==3.0.1
 google-api-core==2.24.1
 google-api-python-client==2.160.0
 google-auth==2.38.0

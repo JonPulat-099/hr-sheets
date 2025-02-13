@@ -3,8 +3,8 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
 from sheets.services.google.add_permission import update_permission, delete_persmission
-from sheets.services.google.add_rules import update_rules_of_vacancies_sheet
 from sheets.services.google.create_spreadsheet import create_spreadsheet_organization
+from ckeditor.fields import RichTextField
 
 
 class Config(models.Model):
@@ -90,7 +90,7 @@ def delete_image_file(sender, instance, **kwargs):
 
 class VacancyCategory(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField(blank=True, null=True)
+    description = RichTextField(default="нет описания")
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True)
     
     def delete(self, *args, **kwargs):

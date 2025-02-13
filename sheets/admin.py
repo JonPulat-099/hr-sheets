@@ -8,6 +8,8 @@ from .models import (
     Country,
     Application,
 )
+from django.db import models
+from ckeditor.fields import RichTextField
 
 
 @admin.register(Config)
@@ -25,6 +27,9 @@ class ApplicationAdmin(admin.ModelAdmin):
 @admin.register(VacancyCategory)
 class VacancyCategoryAdmin(admin.ModelAdmin):
     list_display = [field.name for field in VacancyCategory._meta.fields]
+    formfield_overrides = {
+        models.TextField: {"widget": RichTextField()},
+    }
 
 
 @admin.register(Organization)

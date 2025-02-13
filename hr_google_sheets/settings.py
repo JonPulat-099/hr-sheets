@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'sheets.apps.SheetsConfig',
-    'corsheaders'
+    'corsheaders',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
